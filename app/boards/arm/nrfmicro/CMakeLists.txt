@@ -1,6 +1,8 @@
+if(CONFIG_PINMUX)
 zephyr_library()
 zephyr_library_sources(pinmux.c)
 zephyr_library_include_directories(${ZEPHYR_BASE}/drivers)
+endif()
 
 set_property(GLOBAL APPEND PROPERTY extra_post_build_commands
   COMMAND ${PYTHON_EXECUTABLE} ${ZEPHYR_BASE}/../tools/uf2/utils/uf2conv.py
