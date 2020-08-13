@@ -30,6 +30,9 @@ config SSD1306
 config SSD1306_REVERSE_MODE
 	default y
 
+config ZMK_RGB_UNDERGLOW
+	default y
+
 endif # ZMK_DISPLAY
 
 if LVGL
