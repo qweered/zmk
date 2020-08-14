@@ -17,8 +17,14 @@ static int pinmux_stm32_init(struct device *port)
 	ARG_UNUSED(port);
 
 	struct device *dev = device_get_binding("GPIO_1");
+
+	// enable EXT_VCC
 	gpio_pin_configure(dev, 9, GPIO_OUTPUT);
 	gpio_pin_set(dev, 9, 0);
+
+	// enable charger
+	gpio_pin_configure(dev, 5, GPIO_OUTPUT);
+	gpio_pin_set(dev, 5, 0);
 
 	return 0;
 }
