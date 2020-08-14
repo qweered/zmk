@@ -5,8 +5,8 @@
 	mosi-pin = <6>;
 
 	// Unused pins, needed for SPI definition, but not used by the ws2812 driver itself.
-	sck-pin = <5>;
-	miso-pin = <7>;
+	sck-pin = <9>;
+	miso-pin = <9>;
 
 	led_strip: ws2812@0 {
 		compatible = "worldsemi,ws2812-spi";
@@ -14,7 +14,7 @@
 
 		/* SPI */
 		reg = <0>; /* ignored, but necessary for SPI bindings */
-		spi-max-frequency = <4000000>;
+		spi-max-frequency = <3333333>;
 
 		/* WS2812 */
 		chain-length = <6>; /* arbitrary; change at will */
