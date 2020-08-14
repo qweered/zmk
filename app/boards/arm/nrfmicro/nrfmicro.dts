@@ -46,7 +46,7 @@
 	rx-pin = <8>;
 };
 
-&i2c1 {
+&i2c0 {
 	compatible = "nordic,nrf-twi";
 	sda-pin = <15>;
 	scl-pin = <17>;
