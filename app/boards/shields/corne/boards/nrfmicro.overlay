@@ -4,7 +4,7 @@
 	status = "okay";
 	mosi-pin = <6>;
 
-	// other don't matter
+	// Unused pins, needed for SPI definition, but not used by the ws2812 driver itself.
 	sck-pin = <5>;
 	miso-pin = <7>;
 
