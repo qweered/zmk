@@ -16,15 +16,16 @@ static int pinmux_stm32_init(struct device *port)
 {
 	ARG_UNUSED(port);
 
-	struct device *dev = device_get_binding("GPIO_1");
+	struct device *p0 = device_get_binding("GPIO_0");
+	struct device *p1 = device_get_binding("GPIO_1");
 
 	// enable EXT_VCC (use 0 for nRFMicro 1.3, use 1 for nRFMicro 1.1)
-	gpio_pin_configure(dev, 9, GPIO_OUTPUT);
-	gpio_pin_set(dev, 9, 0);
+	gpio_pin_configure(p1, 9, GPIO_OUTPUT);
+	gpio_pin_set(p1, 9, 0);
 
 	// enable charger (nRFMicro 1.3 only)
-	gpio_pin_configure(dev, 5, GPIO_OUTPUT);
-	gpio_pin_set(dev, 5, 0);
+	gpio_pin_configure(p0, 5, GPIO_OUTPUT);
+	gpio_pin_set(p0, 5, 0);
 
 	return 0;
 }
