@@ -27,6 +27,7 @@ typedef int (*behavior_sensor_keymap_binding_callback_t)(struct zmk_behavior_bin
                                                          int64_t timestamp);
 
 __subsystem struct behavior_driver_api {
+    behavior_keymap_binding_callback_t binding_to_absolute;
     behavior_keymap_binding_callback_t binding_pressed;
     behavior_keymap_binding_callback_t binding_released;
     behavior_sensor_keymap_binding_callback_t sensor_binding_triggered;
@@ -34,6 +35,31 @@ __subsystem struct behavior_driver_api {
 /**
  * @endcond
  */
+
+/**
+ * @brief Handle the keymap binding which needs to be converted from relative "toggle" to absolute
+ * "turn on"
+ * @param binding Pointer to the details so of the binding
+ * @param event The event that triggered use of the binding
+ *
+ * @retval 0 If successful.
+ * @retval Negative errno code if failure.
+ */
+__syscall int behavior_keymap_binding_to_absolute(struct zmk_behavior_binding *binding,
+                                                  struct zmk_behavior_binding_event event);
+
+static inline int
+z_impl_behavior_keymap_binding_to_absolute(struct zmk_behavior_binding *binding,
+                                           struct zmk_behavior_binding_event event) {
+    const struct device *dev = device_get_binding(binding->behavior_dev);
+    const struct behavior_driver_api *api = (const struct behavior_driver_api *)dev->api;
+
+    if (api->binding_to_absolute == NULL) {
+        return 0;
+    }
+
+    return api->binding_to_absolute(binding, event);
+}
 
 /**
  * @brief Handle the keymap binding being pressed
