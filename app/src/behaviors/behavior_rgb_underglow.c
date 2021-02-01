@@ -18,11 +18,35 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 
 static int behavior_rgb_underglow_init(const struct device *dev) { return 0; }
 
+static int on_keymap_binding_to_absolute(struct zmk_behavior_binding *binding,
+                                         struct zmk_behavior_binding_event event) {
+    switch (binding->param1) {
+    case RGB_TOG_CMD: {
+        bool state;
+        int err = zmk_rgb_underglow_get_state(&state);
+        if (err) {
+            LOG_ERR("Failed to get RGB underglow state (err %d)", err);
+            return err;
+        }
+
+        binding->param1 = state ? RGB_OFF_CMD : RGB_ON_CMD;
+        LOG_DBG("RGB relative toggle convert to absolute %s", state ? "OFF" : "ON");
+        return 0;
+    }
+    default:
+        return 0;
+    }
+};
+
 static int on_keymap_binding_pressed(struct zmk_behavior_binding *binding,
                                      struct zmk_behavior_binding_event event) {
     switch (binding->param1) {
     case RGB_TOG_CMD:
         return zmk_rgb_underglow_toggle();
+    case RGB_ON_CMD:
+        return zmk_rgb_underglow_on();
+    case RGB_OFF_CMD:
+        return zmk_rgb_underglow_off();
     case RGB_HUI_CMD:
         return zmk_rgb_underglow_change_hue(1);
     case RGB_HUD_CMD:
@@ -57,8 +81,10 @@ static int on_keymap_binding_released(struct zmk_behavior_binding *binding,
 }
 
 static const struct behavior_driver_api behavior_rgb_underglow_driver_api = {
+    .binding_to_absolute = on_keymap_binding_to_absolute,
     .binding_pressed = on_keymap_binding_pressed,
     .binding_released = on_keymap_binding_released,
+    .locality = BEHAVIOR_LOCALITY_GLOBAL,
 };
 
 DEVICE_AND_API_INIT(behavior_rgb_underglow, DT_INST_LABEL(0), behavior_rgb_underglow_init, NULL,
